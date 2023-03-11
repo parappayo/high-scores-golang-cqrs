@@ -42,3 +42,4 @@ A static web page is provided with filters for viewing leaderboards. First the g
 
 * [CQRS (Martin Fowler)](https://martinfowler.com/bliki/CQRS.html)
 * [Web-Queue-Worker (Microsoft)](https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/web-queue-worker)
+* [Tutorial: Developing a RESTful API with Go and Gin](https://go.dev/doc/tutorial/web-service-gin)
