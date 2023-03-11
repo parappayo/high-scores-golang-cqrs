@@ -8,7 +8,12 @@ The usual caveat applies: do NOT run this code in prod. It is for demo purposes 
 
 ## Setup
 
-No code yet, coming soon.
+* TODO: db setup
+* `make all`
+* start the services
+  * TODO: rename these services to say "service"
+  * `./cmd/get-scores/`
+  * `./cmd/post-score/`
 
 ## Tech Stack
 

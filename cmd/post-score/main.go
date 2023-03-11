@@ -7,7 +7,7 @@ import (
 )
 
 func postScore(ctx *gin.Context) {
-	ctx.IndentedJSON(http.StatusAccepted, {})
+	ctx.IndentedJSON(http.StatusAccepted, nil)
 }
 
 func main() {
