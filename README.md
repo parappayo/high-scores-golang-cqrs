@@ -43,6 +43,14 @@ A `datagen` command is provided for populating the db with dummy data for demo p
 
 A static web page is provided with filters for viewing leaderboards. First the given doc is requested, and if not found then a request is issued to populate the cache.
 
+## Curl Testing
+
+* `./bin/get-score`
+* `curl http://localhost:3000`
+
+* `./bin/post-score`
+* `curl -d '{}' -H "Content-Type: application/json" -X POST http://localhost:3010/`
+
 ## References
 
 * [CQRS (Martin Fowler)](https://martinfowler.com/bliki/CQRS.html)
