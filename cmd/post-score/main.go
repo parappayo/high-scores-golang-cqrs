@@ -61,7 +61,7 @@ func sendSubmitScore(command *submitScoreCommand) error {
 	if err != nil {
 		return err
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
+	ctx, cancel := context.WithTimeout(context.Background(), 500*time.Millisecond)
 	defer cancel()
 
 	err = ch.PublishWithContext(

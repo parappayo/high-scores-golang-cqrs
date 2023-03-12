@@ -67,9 +67,17 @@ A static web page is provided with filters for viewing leaderboards. First the g
 
 ## Local Server Setup
 
-Debian / Ubuntu
+### Debian / Ubuntu
+
+#### RabbitMQ
+
+Install
 * `sudo apt-get install rabbitmq-server`
 * `systemctl status rabbitmq-server`
+
+Debug
+* `rabbitmq-plugins enable rabbitmq_management`
+* browse to `http://localhost:15672` default login is `guest` pw `guest`
 
 ## Curl Testing
 
