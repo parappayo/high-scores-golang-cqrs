@@ -8,12 +8,34 @@ The usual caveat applies: do NOT run this code in prod. It is for demo purposes 
 
 ## Setup
 
-* TODO: db setup
-* `make all`
+### Prereqs
+
+* a RabbitMQ server that you can use
+* a PostgreSQL server that you can use
+
+### PostgreSQL Schema Setup
+
+Coming Soon, basically run some SQL scripts
+
+### Build
+
+* `make install`
+* `make build`
+
+### Start Services
+
 * start the services
   * TODO: rename these services to say "service"
-  * `./cmd/get-scores/`
-  * `./cmd/post-score/`
+  * `./cmd/get-scores`
+  * `./cmd/post-score`
+
+### Synthesize Traffic
+
+Coming Soon
+
+### Demo Frontend
+
+Coming Soon, basically open a static html page hosted by nginx
 
 ## Tech Stack
 
@@ -42,6 +64,12 @@ The `worker` process spins up periodically to accept batches of work (commands) 
 A `datagen` command is provided for populating the db with dummy data for demo purposes. To make the system more realistic it works by issuing web requests at random intervals.
 
 A static web page is provided with filters for viewing leaderboards. First the given doc is requested, and if not found then a request is issued to populate the cache.
+
+## Local Server Setup
+
+Debian / Ubuntu
+* `sudo apt-get install rabbitmq-server`
+* `systemctl status rabbitmq-server`
 
 ## Curl Testing
 

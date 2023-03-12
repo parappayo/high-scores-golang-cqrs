@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"log"
 	"net/http"
 	"time"
 
@@ -79,12 +80,16 @@ func sendSubmitScore(command *submitScoreCommand) error {
 func postScore(ctx *gin.Context) {
 	var request submitScoreRequest
 	if err := ctx.BindJSON(&request); err != nil {
+		log.Print(err)
+		ctx.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
 
 	jobID := uuid.New()
 
 	if err := sendSubmitScore(createCommand(&request, jobID)); err != nil {
+		log.Print(err)
+		ctx.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
 
