@@ -14,37 +14,39 @@ type submitScoreCommand struct {
 	JobID    string `json:"job_id"`
 }
 
-func handleCommand(command *submitScoreCommand) {
-	log.Printf("received submit_score command")
+func handleCommands(commands <-chan *submitScoreCommand) {
+	for c := range commands {
+		log.Printf("received submit_score command: %s", c.Name)
+	}
 }
 
-func getCommands(commandHandler func(*submitScoreCommand)) error {
+func getCommands(commands chan<- *submitScoreCommand) {
 	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672")
 	if err != nil {
-		return err
+		log.Fatal(err)
 	}
 	defer conn.Close()
 
 	ch, err := conn.Channel()
 	if err != nil {
-		return err
+		log.Fatal(err)
 	}
 	defer ch.Close()
 
 	q, err := ch.QueueDeclare("submit_scores", false, false, false, false, nil)
 	if err != nil {
-		return err
+		log.Fatal(err)
 	}
 
-	commands, err := ch.Consume(q.Name, "", true, false, false, false, nil)
+	queueCommands, err := ch.Consume(q.Name, "", true, false, false, false, nil)
 	if err != nil {
-		return err
+		log.Fatal(err)
 	}
 
 	var forever chan struct{}
 
 	go func() {
-		for c := range commands {
+		for c := range queueCommands {
 			log.Printf("Command: %s", c.Body)
 
 			var command submitScoreCommand
@@ -54,17 +56,22 @@ func getCommands(commandHandler func(*submitScoreCommand)) error {
 				continue
 			}
 
-			commandHandler(&command)
+			commands <- &command
+			// TODO: break out of loop after time elapsed or max batch size
 		}
+		close(commands)
 	}()
 
 	<-forever
-	return nil
 }
 
 func main() {
-	err := getCommands(handleCommand)
-	if err != nil {
-		log.Print(err)
-	}
+	commands := make(chan *submitScoreCommand)
+
+	var forever chan struct{}
+
+	go getCommands(commands)
+	go handleCommands(commands)
+
+	<-forever
 }
