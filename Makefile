@@ -3,6 +3,7 @@ install:
 	go get github.com/google/uuid
 	go get github.com/gin-gonic/gin
 	go get github.com/rabbitmq/amqp091-go
+	go get github.com/lib/pq
 
 build:
 	go build -o bin/get-scores ./cmd/get-scores

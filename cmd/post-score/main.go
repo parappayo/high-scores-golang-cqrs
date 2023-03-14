@@ -24,8 +24,10 @@ type submitScoreResponse struct {
 
 type submitScoreCommand struct {
 	Score    uint64 `json:"score"`
+	EventID  string `json:"event_id"`
 	Name     string `json:"name"`
 	Datetime string `json:"datetime"`
+	Region   string `json:"region"`
 	JobID    string `json:"job_id"`
 }
 
@@ -80,7 +82,7 @@ func sendSubmitScore(command *submitScoreCommand) error {
 func postScore(ctx *gin.Context) {
 	var request submitScoreRequest
 	if err := ctx.BindJSON(&request); err != nil {
-		log.Print(err)
+		log.Println(err)
 		ctx.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
@@ -88,7 +90,7 @@ func postScore(ctx *gin.Context) {
 	jobID := uuid.New()
 
 	if err := sendSubmitScore(createCommand(&request, jobID)); err != nil {
-		log.Print(err)
+		log.Println(err)
 		ctx.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
