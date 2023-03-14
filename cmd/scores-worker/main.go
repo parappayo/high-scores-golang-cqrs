@@ -1,12 +1,24 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
-func getCommands() error {
+type submitScoreCommand struct {
+	Score    uint64 `json:"score"`
+	Name     string `json:"name"`
+	Datetime string `json:"datetime"`
+	JobID    string `json:"job_id"`
+}
+
+func handleCommand(command *submitScoreCommand) {
+	log.Printf("received submit_score command")
+}
+
+func getCommands(commandHandler func(*submitScoreCommand)) error {
 	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672")
 	if err != nil {
 		return err
@@ -24,32 +36,34 @@ func getCommands() error {
 		return err
 	}
 
-	err = ch.Publish(
-		"",
-		q.Name,
-		false,
-		false,
-		amqp.Publishing{
-			ContentType: "text/plain",
-			Body:        []byte("hello"),
-		})
-	if err != nil {
-		return err
-	}
-
 	commands, err := ch.Consume(q.Name, "", true, false, false, false, nil)
 	if err != nil {
 		return err
 	}
 
-	for c := range commands {
-		log.Printf("Command: %s", c.Body)
-	}
+	var forever chan struct{}
+
+	go func() {
+		for c := range commands {
+			log.Printf("Command: %s", c.Body)
+
+			var command submitScoreCommand
+			err := json.Unmarshal(c.Body, &command)
+			if err != nil {
+				log.Print(err)
+				continue
+			}
+
+			commandHandler(&command)
+		}
+	}()
+
+	<-forever
 	return nil
 }
 
 func main() {
-	err := getCommands()
+	err := getCommands(handleCommand)
 	if err != nil {
 		log.Print(err)
 	}
